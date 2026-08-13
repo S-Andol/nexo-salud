@@ -1,0 +1,13 @@
+import { PrismaClient } from "@prisma/client";
+
+declare global {
+  var __prisma: PrismaClient | undefined;
+}
+
+// Reuse a single client across hot-reloads in dev and across invocations in
+// serverless environments (Vercel) instead of exhausting DB connections.
+export const prisma = globalThis.__prisma ?? new PrismaClient();
+
+if (process.env.NODE_ENV !== "production") {
+  globalThis.__prisma = prisma;
+}

@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  PACIENTE
+  PROFESIONAL
+  RECEPCIONISTA
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum AppointmentStatus {
+  CONFIRMADO
+  CANCELADO
+  FINALIZADO
+}
+
+enum DayOfWeek {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}
+
+model User {
+  id           String     @id @default(uuid())
+  email        String     @unique
+  passwordHash String     @map("password_hash")
+  role         Role       @default(PACIENTE)
+  status       UserStatus @default(ACTIVE)
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  patient Patient?
+
+  @@map("users")
+}
+
+model Patient {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  firstName String   @map("first_name")
+  lastName  String   @map("last_name")
+  dni       String   @unique
+  birthDate DateTime @map("birth_date") @db.Date
+  phone     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+
+  @@map("patients")
+}
+
+model Specialty {
+  id                  String   @id @default(uuid())
+  name                String   @unique
+  description         String?
+  appointmentDuration Int      @map("appointment_duration")
+  active              Boolean  @default(true)
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  professionals Professional[]
+  appointments  Appointment[]
+
+  @@map("specialties")
+}
+
+model Professional {
+  id            String   @id @default(uuid())
+  firstName     String   @map("first_name")
+  lastName      String   @map("last_name")
+  licenseNumber String   @unique @map("license_number")
+  specialtyId   String   @map("specialty_id")
+  description   String?
+  photoUrl      String?  @map("photo_url")
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  specialty    Specialty              @relation(fields: [specialtyId], references: [id])
+  schedules    ProfessionalSchedule[]
+  appointments Appointment[]
+
+  @@index([specialtyId])
+  @@map("professionals")
+}
+
+model ProfessionalSchedule {
+  id             String    @id @default(uuid())
+  professionalId String    @map("professional_id")
+  dayOfWeek      DayOfWeek @map("day_of_week")
+  startTime      String    @map("start_time")
+  endTime        String    @map("end_time")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  professional Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+
+  @@unique([professionalId, dayOfWeek, startTime, endTime])
+  @@index([professionalId, dayOfWeek])
+  @@map("professional_schedules")
+}
+
+model Appointment {
+  id              String            @id @default(uuid())
+  appointmentCode String            @unique @map("appointment_code")
+  patientId       String            @map("patient_id")
+  professionalId  String            @map("professional_id")
+  specialtyId     String            @map("specialty_id")
+  startDatetime   DateTime          @map("start_datetime")
+  endDatetime     DateTime          @map("end_datetime")
+  status          AppointmentStatus @default(CONFIRMADO)
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  patient      Patient      @relation(fields: [patientId], references: [id])
+  professional Professional @relation(fields: [professionalId], references: [id])
+  specialty    Specialty    @relation(fields: [specialtyId], references: [id])
+
+  @@index([professionalId, startDatetime])
+  @@index([patientId, startDatetime])
+  @@index([status])
+  @@map("appointments")
+}
+
+// Atomic counter used to generate human-readable appointment codes (NX-YYYY-XXXXXX).
+model AppointmentCodeCounter {
+  year    Int @id
+  lastSeq Int @default(0) @map("last_seq")
+
+  @@map("appointment_code_counters")
+}
