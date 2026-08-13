@@ -169,7 +169,7 @@ Generados por `prisma/seed.ts` (`npm run db:seed`), con un PRNG determinístico 
 ## 10. Testabilidad
 
 - **`data-testid` estables** en todos los elementos interactivos clave: `login-email`, `login-password`, `login-submit`, `register-dni` (+ el resto de campos de registro), `specialty-select`, `professional-select`, `appointment-date` (+ subelementos `appointment-date-YYYY-MM-DD` por día), `appointment-time` (+ `appointment-time-HH:mm` por slot), `appointment-confirm`, `appointment-cancel` / `appointment-cancel-confirm` / `appointment-cancel-dismiss`, `profile-save`, entre otros. Ninguno usa un índice dinámico como identificador — los sub-ids son determinísticos a partir del dato (fecha/hora), no de la posición.
-- **`integration_test.mjs`** — suite de integración escrita durante la construcción de V1 (vive fuera del repo, en el scratchpad de la sesión de build; no está commiteada). Golpea la API HTTP real (no llama a los services directamente), cubre: registro, guard de autenticación, RN-01/06/07/08/09, máquina de estados de cancelación, actualización de perfil, login de cuenta demo, y la prueba de concurrencia (incluye una verificación SQL directa de cero solapamientos). Recomendado migrarla a un archivo versionado del repo si el proyecto avanza hacia la fase V3 de testing automatizado.
+- **`tests/integration/integration_test.mjs`** — suite de integración versionada en el repo, ejecutable con `npm run test:integration`. Golpea la API HTTP real (no llama a los services directamente) contra una instancia corriendo de la app (`npm run dev`, por defecto `http://localhost:3000`, configurable con `TEST_BASE_URL`); requiere que la base ya esté migrada y sembrada (`npm run db:seed`). Cubre: registro, guard de autenticación, RN-01/06/07/08/09, máquina de estados de cancelación, actualización de perfil, login de cuenta demo, y la prueba de concurrencia (incluye una verificación SQL directa de cero solapamientos vía `prisma.$queryRaw`). Lee `DATABASE_URL` desde el `.env` del proyecto solo para esa verificación directa en Postgres — nunca la imprime ni la hardcodea.
 - **Reglas determinísticas:** toda la lógica de fecha/hora pasa por `lib/time/timezone.ts` (offset fijo `-03:00`, sin dependencia de la zona horaria del servidor ni de `Date#getDay()`/`getHours()` directos), por lo que los casos límite (exactamente 2h, 1h59m, exactamente 90 días, 90d+1, etc.) son reproducibles.
 - **Códigos de error estables:** cada regla de negocio devuelve un `AppErrorCode` propio (ver tabla en sección 5) en `{ error: { code, message, fields? } }` — el frontend y cualquier test deben usar `code`, nunca parsear el texto de `message`.
 
@@ -186,7 +186,7 @@ Todas las verificaciones fueron ejecutadas contra la base de datos real (Neon), 
 | `next build` (producción) | ✅ PASS — 19 rutas, todas dinámicas (`ƒ`) |
 | Conexión a Neon (`prisma migrate status`) | ✅ PASS — esquema al día |
 | `npm run db:seed` | ✅ PASS — 40 históricos / 20 futuros / 8 cancelados |
-| Suite de integración (`integration_test.mjs`) | ✅ **30/30 PASS** |
+| Suite de integración (`npm run test:integration`) | ✅ **30/30 PASS** |
 | Prueba de concurrencia | ✅ PASS — exactamente un ganador, cero solapamientos verificados directamente en Postgres |
 | Persistencia | ✅ PASS — datos verificados idénticos tras un reinicio completo del proceso `next dev` |
 
@@ -215,10 +215,14 @@ npm run dev
 # http://localhost:3000
 
 # 6. Verificaciones
-npx tsc --noEmit          # typecheck
-npm run lint               # lint
-npm run build               # build de producción
-npx prisma migrate status  # confirma conexión y estado de migraciones
+npx tsc --noEmit           # typecheck
+npm run lint                # lint
+npm run build                # build de producción
+npx prisma migrate status   # confirma conexión y estado de migraciones
+
+# 7. Suite de integración (requiere el server de (5) corriendo en otra terminal,
+#    con la base ya migrada + sembrada)
+npm run test:integration
 ```
 
 **Importante:** existe un único archivo de entorno, `.env` (no `.env.local`) — es el que Next.js, la CLI de Prisma, Prisma Migrate y Prisma Client (usado por `prisma/seed.ts`) leen automáticamente. Editar solo ese archivo al rotar credenciales.
