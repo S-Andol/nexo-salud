@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NEXO Salud — Tu salud, organizada</title>
+  <meta
+    name="description"
+    content="Demo visual de NEXO Salud: reservá turnos con profesionales de distintas especialidades de manera rápida, sencilla y segura."
+  />
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="demo-banner">
+    Demo visual de NEXO Salud V1 — sin backend conectado. La aplicación completa corre en un servidor propio.
+    <a href="https://github.com/S-Andol/nexo-salud" target="_blank" rel="noopener">Ver repositorio</a>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="./index.html" class="logo">
+        <span class="logo-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 21s-7.5-4.6-10-9.3C.4 8 2 4 6 4c2.4 0 3.9 1.3 6 3.6C14.1 5.3 15.6 4 18 4c4 0 5.6 4 4 7.7C19.5 16.4 12 21 12 21Z" stroke-linejoin="round" />
+            <path d="M8.5 12h2l1.2-2.4L13 14l1-2h1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+        <span class="logo-word">NEXO Salud</span>
+      </a>
+
+      <nav class="main-nav">
+        <a href="#inicio">Inicio</a>
+        <a href="#especialidades">Especialidades</a>
+        <a href="#profesionales">Profesionales</a>
+        <a href="#como-funciona">Cómo funciona</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="#" class="btn btn-ghost" data-demo-disabled>Iniciar sesión</a>
+        <a href="#" class="btn btn-primary" data-demo-disabled>Registrarse</a>
+      </div>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <nav>
+        <a href="#inicio">Inicio</a>
+        <a href="#especialidades">Especialidades</a>
+        <a href="#profesionales">Profesionales</a>
+        <a href="#como-funciona">Cómo funciona</a>
+        <div class="divider"></div>
+        <div class="stack">
+          <a href="#" class="btn btn-secondary" data-demo-disabled>Iniciar sesión</a>
+          <a href="#" class="btn btn-primary" data-demo-disabled>Registrarse</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="container hero-inner">
+        <div class="hero-content">
+          <span class="eyebrow">Centro médico digital</span>
+          <h1>Tu salud, organizada en un solo lugar.</h1>
+          <p>
+            Reservá turnos con profesionales de distintas especialidades de manera rápida, sencilla y
+            segura.
+          </p>
+          <div class="hero-ctas">
+            <a href="#profesionales" class="btn btn-primary btn-lg">Reservar turno</a>
+            <a href="#profesionales" class="btn btn-secondary btn-lg">Ver profesionales</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="especialidades">
+      <div class="container">
+        <div class="section-head">
+          <h2>Especialidades destacadas</h2>
+          <p>Encontrá al profesional adecuado para cada necesidad.</p>
+        </div>
+
+        <div class="specialty-grid" id="specialtyGrid"></div>
+      </div>
+    </section>
+
+    <section class="professionals-section" id="profesionales">
+      <div class="container">
+        <div class="section-head-row">
+          <div>
+            <h2>Profesionales</h2>
+            <p>Conocé a nuestro equipo médico.</p>
+          </div>
+          <a href="#" class="btn btn-secondary" data-demo-disabled>Ver todos</a>
+        </div>
+
+        <div class="professionals-grid" id="professionalsGrid"></div>
+      </div>
+    </section>
+
+    <section id="como-funciona">
+      <div class="container">
+        <div class="section-head">
+          <h2>Cómo funciona</h2>
+          <p>Reservar tu turno lleva menos de dos minutos.</p>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <span class="step-number">1</span>
+            <h3>Elegí una especialidad</h3>
+            <p>Seleccioná el área médica que necesitás.</p>
+          </div>
+          <div class="step-card">
+            <span class="step-number">2</span>
+            <h3>Seleccioná un profesional</h3>
+            <p>Mirá disponibilidad, matrícula y especialidad.</p>
+          </div>
+          <div class="step-card">
+            <span class="step-number">3</span>
+            <h3>Elegí fecha y horario</h3>
+            <p>Solo vas a ver turnos realmente disponibles.</p>
+          </div>
+          <div class="step-card">
+            <span class="step-number">4</span>
+            <h3>Confirmá tu turno</h3>
+            <p>Recibí un código único al instante.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-top">
+      <div class="footer-brand">
+        <a href="./index.html" class="logo">
+          <span class="logo-mark">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 21s-7.5-4.6-10-9.3C.4 8 2 4 6 4c2.4 0 3.9 1.3 6 3.6C14.1 5.3 15.6 4 18 4c4 0 5.6 4 4 7.7C19.5 16.4 12 21 12 21Z" stroke-linejoin="round" />
+              <path d="M8.5 12h2l1.2-2.4L13 14l1-2h1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-word">NEXO Salud</span>
+        </a>
+        <p>Tu salud, organizada.</p>
+      </div>
+
+      <div class="footer-columns">
+        <div>
+          <h3>Producto</h3>
+          <ul>
+            <li><a href="#especialidades">Especialidades</a></li>
+            <li><a href="#profesionales">Profesionales</a></li>
+            <li><a href="#como-funciona">Cómo funciona</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Proyecto</h3>
+          <ul>
+            <li><a href="https://github.com/S-Andol/nexo-salud" target="_blank" rel="noopener">Repositorio GitHub</a></li>
+            <li><a href="https://github.com/S-Andol/nexo-salud/blob/main/docs/V1_TECHNICAL_BASELINE.md" target="_blank" rel="noopener">Documentación técnica</a></li>
+            <li><a href="https://github.com/S-Andol/nexo-salud/blob/main/README.md" target="_blank" rel="noopener">README</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <p>© <span id="year"></span> NEXO Salud. Todos los derechos reservados.</p>
+      <p>Proyecto académico — datos e información ficticios. Esta página es una demo visual estática.</p>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="./script.js"></script>
+</body>
+</html>

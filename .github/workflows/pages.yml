@@ -1,0 +1,46 @@
+name: Deploy GitHub Pages showcase
+
+# Publishes ONLY the static pages-site/ folder (a hand-written visual showcase of
+# the NEXO Salud landing) to GitHub Pages. This workflow never builds, runs, or
+# deploys the real Next.js application — that runs separately on its own Docker/
+# Ubuntu/Neon deployment and is untouched by this. No secrets, no .env, no Neon
+# connection are needed here.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "pages-site/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload pages-site as artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: pages-site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
