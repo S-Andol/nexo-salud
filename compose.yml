@@ -1,0 +1,17 @@
+services:
+  nexo-salud:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SHOW_DEMO_CREDENTIALS: "true"
+
+    container_name: nexo-salud
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    ports:
+      - "3000:3000"
